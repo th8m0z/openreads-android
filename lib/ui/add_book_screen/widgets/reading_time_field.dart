@@ -10,12 +10,7 @@ import 'package:openreads/model/book.dart';
 import 'package:openreads/model/reading_time.dart';
 
 class BookReadingTimeField extends StatefulWidget {
-  const BookReadingTimeField({
-    Key? key,
-    required this.defaultHeight,
-  }) : super(key: key);
-
-  final double defaultHeight;
+  const BookReadingTimeField({super.key});
 
   @override
   State<BookReadingTimeField> createState() => _BookReadingTimeField();
@@ -149,72 +144,69 @@ class _BookReadingTimeField extends State<BookReadingTimeField> {
         ? const SizedBox()
         : Column(children: [
             const SizedBox(height: 10),
-            SizedBox(
-              height: widget.defaultHeight,
-              width: MediaQuery.of(context).size.width - 20,
-              child: Stack(
-                children: [
-                  InkWell(
-                    customBorder: RoundedRectangleBorder(
+            Stack(
+              children: [
+                InkWell(
+                  customBorder: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(cornerRadius),
+                  ),
+                  onTap: () => buildShowDialog(context),
+                  child: Ink(
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(cornerRadius),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .surfaceVariant
+                          .withOpacity(0.5),
+                      border: Border.all(color: dividerColor),
                     ),
-                    onTap: () => buildShowDialog(context),
-                    child: Ink(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(cornerRadius),
-                        color: Theme.of(context)
-                            .colorScheme
-                            .surfaceVariant
-                            .withOpacity(0.5),
-                        border: Border.all(color: dividerColor),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 15,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 10,
-                        ),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(
-                                FontAwesomeIcons.solidClock,
-                                color: Theme.of(context).colorScheme.primary,
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              FontAwesomeIcons.solidClock,
+                              color: Theme.of(context).colorScheme.primary,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 15),
+                            FittedBox(
+                              child: Text(
+                                formattedText,
+                                maxLines: 1,
+                                style: const TextStyle(fontSize: 14),
                               ),
-                              const SizedBox(width: 15),
-                              FittedBox(
-                                child: Text(
-                                  formattedText,
-                                  maxLines: 1,
-                                  style: const TextStyle(fontSize: 14),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                  Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        (state.readingTime != null)
-                            ? IconButton(
-                                icon: const Icon(
-                                  Icons.close,
-                                  size: 20,
-                                ),
-                                onPressed: _resetTime,
-                              )
-                            : const SizedBox(),
-                      ],
-                    ),
+                ),
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      (state.readingTime != null)
+                          ? IconButton(
+                              icon: const Icon(
+                                Icons.close,
+                                size: 20,
+                              ),
+                              onPressed: _resetTime,
+                            )
+                          : const SizedBox(),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             )
           ]);
   }

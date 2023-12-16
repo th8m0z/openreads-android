@@ -11,24 +11,23 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:openreads/core/constants/constants.dart';
 import 'package:openreads/core/constants/enums.dart';
 import 'package:openreads/core/helpers/helpers.dart';
+import 'package:openreads/core/themes/app_theme.dart';
 import 'package:openreads/generated/locale_keys.g.dart';
 import 'package:openreads/logic/cubit/edit_book_cubit.dart';
 import 'package:openreads/resources/open_library_service.dart';
 import 'package:openreads/main.dart';
 import 'package:openreads/model/book.dart';
-import 'package:openreads/ui/add_book_screen/widgets/cover_view_edit.dart';
-import 'package:openreads/ui/add_book_screen/widgets/reading_time_field.dart';
 import 'package:openreads/ui/add_book_screen/widgets/widgets.dart';
 
 class AddBookScreen extends StatefulWidget {
   const AddBookScreen({
-    Key? key,
+    super.key,
     this.fromOpenLibrary = false,
     this.fromOpenLibraryEdition = false,
     this.editingExistingBook = false,
     this.coverOpenLibraryID,
     this.work,
-  }) : super(key: key);
+  });
 
   final bool fromOpenLibrary;
   final bool fromOpenLibraryEdition;
@@ -56,6 +55,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
   final _animDuration = const Duration(milliseconds: 250);
 
   bool _isCoverDownloading = false;
+  int _additionalReadingDates = 0;
 
   static const String coverBaseUrl = 'https://covers.openlibrary.org/';
   late final String coverUrl =
@@ -446,7 +446,8 @@ class _AddBookScreenState extends State<AddBookScreen> {
               ),
               const SizedBox(height: 10),
               BookRatingBar(animDuration: _animDuration),
-              DateRow(
+              const SizedBox(height: 10),
+              StartAndEndDates(
                 animDuration: _animDuration,
                 defaultHeight: defaultFormHeight,
                 showStartDatePicker: _showStartDatePicker,
@@ -454,9 +455,88 @@ class _AddBookScreenState extends State<AddBookScreen> {
                 clearStartDate: _clearStartDate,
                 clearFinishDate: _clearFinishDate,
               ),
-              const BookReadingTimeField(defaultHeight: defaultFormHeight),
+              const SizedBox(height: 10),
+              BlocBuilder<EditBookCubit, Book>(
+                builder: (context, state) {
+                  return state.status == 0
+                      ? Column(
+                          children: [
+                            const SizedBox(height: 10),
+                            for (int i = 0; i < _additionalReadingDates; i++)
+                              Column(
+                                children: [
+                                  const SizedBox(height: 10),
+                                  StartAndEndDates(
+                                    animDuration: _animDuration,
+                                    defaultHeight: defaultFormHeight,
+                                    showStartDatePicker: _showStartDatePicker,
+                                    showFinishDatePicker: _showFinishDatePicker,
+                                    clearStartDate: _clearStartDate,
+                                    clearFinishDate: _clearFinishDate,
+                                    additionalDateIndex: i,
+                                  ),
+                                  const SizedBox(height: 20),
+                                ],
+                              ),
+                          ],
+                        )
+                      : const SizedBox();
+                },
+              ),
+              BlocBuilder<EditBookCubit, Book>(
+                builder: (context, state) {
+                  return state.status == 0
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _additionalReadingDates++;
+                                  });
+                                },
+                                style: TextButton.styleFrom(
+                                  elevation: 0,
+                                  visualDensity: VisualDensity.compact,
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.secondary,
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.onSecondary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(cornerRadius),
+                                    side: BorderSide(
+                                      color: dividerColor,
+                                      width: 1,
+                                    ),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    const Icon(
+                                      FontAwesomeIcons.plus,
+                                      size: 12,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      LocaleKeys.record_additional_reading.tr(),
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : const SizedBox();
+                },
+              ),
               const Padding(
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
                 child: Divider(),
               ),
               Row(

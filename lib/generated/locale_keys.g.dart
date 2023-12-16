@@ -272,4 +272,5 @@ abstract class LocaleKeys {
       'download_missing_covers_explanation';
   static const downloaded_covers = 'downloaded_covers';
   static const try_downloading_covers = 'try_downloading_covers';
+  static const record_additional_reading = 'record_additional_reading';
 }
