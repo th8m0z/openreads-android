@@ -83,8 +83,8 @@ class Book {
       favourite: (json['favourite'] == 1) ? true : false,
       hasCover: (json['has_cover'] == 1) ? true : false,
       deleted: (json['deleted'] == 1) ? true : false,
-      startDate: json['start_date'] != null
-          ? DateTime.parse(json['start_date'])
+      startDate: json['start_dates'] != null
+          ? DateTime.parse(json['start_dates'])
           : null,
       finishDate: json['finish_date'] != null
           ? DateTime.parse(json['finish_date'])
@@ -249,7 +249,7 @@ class Book {
       'rating': rating,
       'favourite': favourite ? 1 : 0,
       'deleted': deleted ? 1 : 0,
-      'start_date': startDate?.toIso8601String(),
+      'start_dates': startDate?.toIso8601String(),
       'finish_date': finishDate?.toIso8601String(),
       'pages': pages,
       'publication_year': publicationYear,
