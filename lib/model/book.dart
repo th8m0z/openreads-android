@@ -17,8 +17,8 @@ class Book {
   bool favourite;
   bool deleted;
   int? rating;
-  DateTime? startDate;
-  DateTime? finishDate;
+  List<DateTime>? startDates;
+  List<DateTime>? finishDates;
   int? pages;
   int? publicationYear;
   String? isbn;
@@ -30,7 +30,7 @@ class Book {
   String? blurHash;
   BookFormat bookFormat;
   bool hasCover;
-  ReadingTime? readingTime;
+  List<ReadingTime?>? readingTimes;
 
   Book({
     this.id,
@@ -42,8 +42,8 @@ class Book {
     this.favourite = false,
     this.deleted = false,
     this.rating,
-    this.startDate,
-    this.finishDate,
+    this.startDates,
+    this.finishDates,
     this.pages,
     this.publicationYear,
     this.isbn,
@@ -55,7 +55,7 @@ class Book {
     this.blurHash,
     this.bookFormat = BookFormat.paperback,
     this.hasCover = false,
-    this.readingTime,
+    this.readingTimes,
   });
 
   factory Book.empty() {
@@ -83,11 +83,21 @@ class Book {
       favourite: (json['favourite'] == 1) ? true : false,
       hasCover: (json['has_cover'] == 1) ? true : false,
       deleted: (json['deleted'] == 1) ? true : false,
-      startDate: json['start_dates'] != null
-          ? DateTime.parse(json['start_dates'])
+      startDates: json['start_dates'] != null
+          ? json['start_dates'].toString().split('|').isNotEmpty
+              ? List<DateTime>.from(
+                  json["start_dates"].split('|').map((x) => DateTime.parse(x)))
+              : DateTime.tryParse(json['start_dates']) != null
+                  ? [DateTime.parse(json['start_dates'])]
+                  : null
           : null,
-      finishDate: json['finish_date'] != null
-          ? DateTime.parse(json['finish_date'])
+      finishDates: json['finish_dates'] != null
+          ? json['finish_dates'].toString().split('|').isNotEmpty
+              ? List<DateTime>.from(
+                  json["finish_dates"].split('|').map((x) => DateTime.parse(x)))
+              : DateTime.tryParse(json['finish_dates']) != null
+                  ? [DateTime.parse(json['finish_dates'])]
+                  : null
           : null,
       pages: json['pages'],
       publicationYear: json['publication_year'],
@@ -109,8 +119,11 @@ class Book {
                   : json['book_type'] == 'paperback'
                       ? BookFormat.paperback
                       : BookFormat.paperback,
-      readingTime: json['reading_time'] != null
-          ? ReadingTime.fromMilliSeconds(json['reading_time'])
+      readingTimes: json['reading_times'] != null
+          ? json['reading_time'].toString().split('|').isNotEmpty
+              ? List<ReadingTime>.from(json["reading_time"].split('|').map(
+                  (x) => x == 'null' ? null : ReadingTime.fromMilliSeconds(x)))
+              : [ReadingTime.fromMilliSeconds(json['reading_time'])]
           : null,
     );
   }
@@ -124,8 +137,8 @@ class Book {
     bool? favourite,
     bool? deleted,
     int? rating,
-    DateTime? startDate,
-    DateTime? finishDate,
+    List<DateTime>? startDates,
+    List<DateTime>? finishDates,
     int? pages,
     int? publicationYear,
     String? isbn,
@@ -137,7 +150,7 @@ class Book {
     String? blurHash,
     BookFormat? bookFormat,
     bool? hasCover,
-    ReadingTime? readingTime,
+    List<ReadingTime?>? readingTimes,
   }) {
     return Book(
       id: id,
@@ -149,8 +162,8 @@ class Book {
       favourite: favourite ?? this.favourite,
       deleted: deleted ?? this.deleted,
       rating: rating ?? this.rating,
-      startDate: startDate ?? this.startDate,
-      finishDate: finishDate ?? this.finishDate,
+      startDates: startDates ?? this.startDates,
+      finishDates: finishDates ?? this.finishDates,
       pages: pages ?? this.pages,
       publicationYear: publicationYear ?? this.publicationYear,
       isbn: isbn ?? this.isbn,
@@ -162,7 +175,7 @@ class Book {
       blurHash: blurHash ?? this.blurHash,
       bookFormat: bookFormat ?? this.bookFormat,
       hasCover: hasCover ?? this.hasCover,
-      readingTime: readingTime ?? this.readingTime,
+      readingTimes: readingTimes ?? this.readingTimes,
     );
   }
 
@@ -177,8 +190,8 @@ class Book {
       favourite: favourite,
       deleted: deleted,
       rating: rating,
-      startDate: startDate,
-      finishDate: finishDate,
+      startDates: startDates,
+      finishDates: finishDates,
       pages: pages,
       publicationYear: publicationYear,
       isbn: isbn,
@@ -190,7 +203,7 @@ class Book {
       blurHash: blurHash,
       bookFormat: bookFormat,
       hasCover: hasCover,
-      readingTime: readingTime,
+      readingTimes: readingTimes,
     );
   }
 
@@ -211,17 +224,21 @@ class Book {
           : null,
       favourite: oldBook.bookIsFav == 1,
       deleted: oldBook.bookIsDeleted == 1,
-      startDate: oldBook.bookStartDate != null &&
+      startDates: oldBook.bookStartDate != null &&
               oldBook.bookStartDate != 'none' &&
               oldBook.bookStartDate != 'null'
-          ? DateTime.fromMillisecondsSinceEpoch(
-              int.parse(oldBook.bookStartDate!))
+          ? [
+              DateTime.fromMillisecondsSinceEpoch(
+                  int.parse(oldBook.bookStartDate!))
+            ]
           : null,
-      finishDate: oldBook.bookFinishDate != null &&
+      finishDates: oldBook.bookFinishDate != null &&
               oldBook.bookFinishDate != 'none' &&
               oldBook.bookFinishDate != 'null'
-          ? DateTime.fromMillisecondsSinceEpoch(
-              int.parse(oldBook.bookFinishDate!))
+          ? [
+              DateTime.fromMillisecondsSinceEpoch(
+                  int.parse(oldBook.bookFinishDate!))
+            ]
           : null,
       pages: oldBook.bookNumberOfPages,
       publicationYear: oldBook.bookPublishYear,
@@ -249,8 +266,8 @@ class Book {
       'rating': rating,
       'favourite': favourite ? 1 : 0,
       'deleted': deleted ? 1 : 0,
-      'start_dates': startDate?.toIso8601String(),
-      'finish_date': finishDate?.toIso8601String(),
+      'start_dates': startDates?.map((e) => e.toIso8601String()).join('|'),
+      'finish_date': finishDates?.map((e) => e.toIso8601String()).join('|'),
       'pages': pages,
       'publication_year': publicationYear,
       'isbn': isbn,
@@ -270,7 +287,9 @@ class Book {
                   : bookFormat == BookFormat.paperback
                       ? 'paperback'
                       : 'paperback',
-      'reading_time': readingTime?.milliSeconds,
+      'reading_time': readingTimes
+          ?.map((e) => e == null ? 'null' : e.milliSeconds)
+          .join('|'),
     };
   }
 
