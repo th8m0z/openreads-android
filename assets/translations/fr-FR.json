@@ -227,5 +227,6 @@
     "update_successful_message": "Mise à jour terminée !",
     "openreads_backup": "Sauvegarde Openreads",
     "export_csv": "Exporter les livres dans un fichier CSV",
-    "import_successful": "Import réussi"
+    "import_successful": "Import réussi",
+    "book_format_paperback_plural": "Livres de poche"
 }
