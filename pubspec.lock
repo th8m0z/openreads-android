@@ -113,6 +113,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  chip_list:
+    dependency: "direct main"
+    description:
+      name: chip_list
+      sha256: "4abca0c956e246dc6a20c3a5dacd84a5422c29de89134492d4290c424ca0b5e0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.4+8"
   cli_util:
     dependency: transitive
     description:
@@ -989,6 +997,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
+  sealed_languages:
+    dependency: "direct main"
+    description:
+      name: sealed_languages
+      sha256: "88c19b9aa4d8a6045d1ea9b7642378188bd1da14b45eeb6075c680a03ca7ee80"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   settings_ui:
     dependency: "direct main"
     description:

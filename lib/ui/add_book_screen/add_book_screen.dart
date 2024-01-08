@@ -236,7 +236,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
       await tmpFile.writeAsBytes(response.bodyBytes);
 
       if (!mounted) return;
-      await generateBlurHash(response.bodyBytes, context);
+      await Helpers.generateBlurHash(response.bodyBytes, context);
 
       if (!mounted) return;
       context.read<EditBookCoverCubit>().setCover(tmpFile);

@@ -103,7 +103,7 @@ class _CoverViewEditState extends State<CoverViewEdit> {
       return;
     }
 
-    await generateBlurHash(croppedPhotoBytes, context);
+    await Helpers.generateBlurHash(croppedPhotoBytes, context);
     if (!context.mounted) {
       _setCoverLoading(false);
       return;
@@ -154,7 +154,7 @@ class _CoverViewEditState extends State<CoverViewEdit> {
     await coverFileForSaving.writeAsBytes(cover);
 
     // ignore: use_build_context_synchronously
-    await generateBlurHash(cover, context);
+    await Helpers.generateBlurHash(cover, context);
 
     // ignore: use_build_context_synchronously
     context.read<EditBookCoverCubit>().setCover(coverFileForSaving);

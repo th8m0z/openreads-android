@@ -14,6 +14,7 @@ class OpenLibraryService {
     required int offset,
     required int limit,
     required OLSearchType searchType,
+    String? languageCode,
   }) async {
     final searchTypeKey = searchType == OLSearchType.general
         ? 'q'
@@ -27,7 +28,9 @@ class OpenLibraryService {
 
     final response = await get(
       Uri.parse(
-        '${baseUrl}search.json?$searchTypeKey=$query&limit=$limit&offset=$offset',
+        languageCode != null
+            ? '${baseUrl}search.json?$searchTypeKey=$query&limit=$limit&offset=$offset&language=$languageCode'
+            : '${baseUrl}search.json?$searchTypeKey=$query&limit=$limit&offset=$offset',
       ),
     );
     return openLibrarySearchResultFromJson(response.body);
