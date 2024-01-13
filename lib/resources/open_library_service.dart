@@ -26,13 +26,16 @@ class OpenLibraryService {
                     ? 'isbn'
                     : 'q';
 
-    final response = await get(
+    print(
+        "url == ${baseUrl}search.json?$searchTypeKey=$query&limit=$limit&offset=$offset&language=$languageCode");
+    final Response response = await get(
       Uri.parse(
         languageCode != null
             ? '${baseUrl}search.json?$searchTypeKey=$query&limit=$limit&offset=$offset&language=$languageCode'
             : '${baseUrl}search.json?$searchTypeKey=$query&limit=$limit&offset=$offset',
       ),
     );
+    print("response == ${response.body}");
     return openLibrarySearchResultFromJson(response.body);
   }
 

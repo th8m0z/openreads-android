@@ -21,6 +21,12 @@ class Helpers {
   }
 
   static List<String> getLanguageCodes() {
-    return NaturalLanguage.list.map((e) => e.code).toList();
+    return NaturalLanguage.list
+        .map((e) => e.bibliographicCode ?? e.code)
+        .toList();
+  }
+
+  static List<String> getLanguages() {
+    return NaturalLanguage.list.map((e) => e.name).toList();
   }
 }

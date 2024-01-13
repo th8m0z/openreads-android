@@ -1,10 +1,12 @@
 import 'package:barcode_scan2/barcode_scan2.dart';
+import 'package:chip_list/chip_list.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:openreads/core/constants/enums.dart';
+import 'package:openreads/core/helpers/helpers.dart';
 import 'package:openreads/core/themes/app_theme.dart';
 import 'package:openreads/generated/locale_keys.g.dart';
 import 'package:openreads/logic/bloc/open_library_search_bloc/open_library_search_bloc.dart';
@@ -35,6 +37,7 @@ class _SearchOLScreenState extends State<SearchOLScreen>
   int? numberOfResults;
   ScanResult? scanResult;
   int searchTimestamp = 0;
+  int selectedLanguageIndex = 0;
 
   bool searchActivated = false;
 
@@ -93,6 +96,9 @@ class _SearchOLScreenState extends State<SearchOLScreen>
         searchType: _getOLSearchTypeEnum(
           context.read<OpenLibrarySearchBloc>().state,
         ),
+        languageCode: selectedLanguageIndex > 0
+            ? Helpers.getLanguageCodes()[selectedLanguageIndex - 1]
+            : null,
       );
 
       // Used to cancel the request if a new search is started
@@ -308,6 +314,25 @@ class _SearchOLScreenState extends State<SearchOLScreen>
                 },
               ),
             ],
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 5),
+            height: 50,
+            child: ChipList(
+                inactiveTextColorList: [
+                  Theme.of(context).colorScheme.onBackground
+                ],
+                checkmarkColor: Theme.of(context).colorScheme.primary,
+                activeBgColorList: [Theme.of(context).colorScheme.primary],
+                activeTextColorList: [Theme.of(context).primaryColorLight],
+                extraOnToggle: (index) {
+                  setState(() {
+                    selectedLanguageIndex = index;
+                  });
+                },
+                axis: Axis.horizontal,
+                listOfChipNames: Helpers.getLanguages()..insert(0, "All"),
+                listOfChipIndicesCurrentlySeclected: [selectedLanguageIndex]),
           ),
           const Padding(
             padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
