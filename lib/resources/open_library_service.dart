@@ -26,8 +26,11 @@ class OpenLibraryService {
                     ? 'isbn'
                     : 'q';
 
-    print(
-        "url == ${baseUrl}search.json?$searchTypeKey=$query&limit=$limit&offset=$offset&language=$languageCode");
+    // Open Library only working with lowercase language codes
+    if (languageCode != null) {
+      languageCode = languageCode.toLowerCase();
+    }
+
     final Response response = await get(
       Uri.parse(
         languageCode != null
@@ -35,7 +38,7 @@ class OpenLibraryService {
             : '${baseUrl}search.json?$searchTypeKey=$query&limit=$limit&offset=$offset',
       ),
     );
-    print("response == ${response.body}");
+
     return openLibrarySearchResultFromJson(response.body);
   }
 
